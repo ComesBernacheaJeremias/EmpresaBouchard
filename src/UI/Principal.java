@@ -4,10 +4,8 @@ import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.ParseException;
-import java.util.Arrays;
 
 public class Principal extends JFrame {
     private JPanel Principal;
@@ -22,126 +20,71 @@ public class Principal extends JFrame {
     private JTextField TfApellido;
     private JLabel Titulo;
     private JPanel PanelDatos;
-    private JTextField TfNacimiento;
-    private JTextField TfMuerte;
     private JPanel PanelResultDatos;
     private JLabel ResultApellido;
     private JLabel ResultNacimiento;
     private JLabel ResultMuerte;
     private JFormattedTextField FormattedTFNaci;
     private JFormattedTextField FormateddTexFieldMuerte;
-    JFileChooser fileChooser = new JFileChooser();
-
-
-
+    private JFileChooser fileChooser = new JFileChooser();
 
     // Constructor de la clase Principal
     public Principal() {
-        // Configurar la ventana
         setTitle("Mi Ventana Principal");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(Principal);
 
-        System.out.println("entro en Principañl");
-
-        createUIComponents();
-        PanelDatos.add(FormattedTFNaci);
-        PanelDatos.add(FormateddTexFieldMuerte);
-
-        System.out.println("primero" + FormattedTFNaci);
-        System.out.println("primero" + FormateddTexFieldMuerte);
-        System.out.println("primero" + FormattedTFNaci.getText());
-        System.out.println("primero" + FormateddTexFieldMuerte.getText());
-        System.out.println("primero" + FormattedTFNaci.getValue());
-        System.out.println("primero" + FormateddTexFieldMuerte.getValue());
 
 
-
-
-
-
-        // Agregar un ActionListener al botón para capturar el texto
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Obtener el texto del campo de texto
-                String nombre = textoEscrito.getText();
-                // Establecer el texto en la etiqueta
-                Label.setText(nombre);
-                String apellido = TfApellido.getText();
-                ResultApellido.setText(apellido);
-
-
-
-                Object nacimientoValue = FormattedTFNaci.getValue();
-                Object muerteValue = FormateddTexFieldMuerte.getValue();
-                System.out.println(nacimientoValue);
-                System.out.println(muerteValue);
-                System.out.println(FormattedTFNaci.getText());
-                System.out.println(FormateddTexFieldMuerte.getText());
-
-                System.out.println(FormattedTFNaci.getValue().toString());
-                System.out.println(FormateddTexFieldMuerte.getValue().toString());
-
-                if(nacimientoValue != null && muerteValue != null) {
-                    ResultNacimiento.setText(nacimientoValue.toString());
-                    ResultMuerte.setText(muerteValue.toString());
-                }else {System.out.println("el valor es nulooo");}
-
-            }
-        });
-        buscarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int result = fileChooser.showOpenDialog(null);
-
-                // Verificar si el usuario seleccionó un archivo (botón "Aceptar" en el diálogo)
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    // Obtener el archivo seleccionado por el usuario
-                    File selectedFile = fileChooser.getSelectedFile();
-                    ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-
-// Redimensionar la imagen para ajustarla al tamaño del JLabel
-                    Image image = imageIcon.getImage(); // Obtener la imagen del ImageIcon
-                    Image newImage = image.getScaledInstance(LabelImg.getWidth(), LabelImg.getHeight(), Image.SCALE_SMOOTH); // Redimensionar la imagen
-                    imageIcon = new ImageIcon(newImage); // Crear un nuevo ImageIcon con la imagen redimensionada
-
-
-                    // Mostrar la imagen en el JLabel
-                    LabelImg.setIcon(imageIcon);
-
-
-                }
-            }
-
-        });
+        // Agregar ActionListeners
+        button1.addActionListener(this::onButton1Click);
+        buscarButton.addActionListener(this::onBuscarButtonClick);
     }
 
+    // Método para capturar el texto y establecer en los labels
+    private void onButton1Click(ActionEvent e) {
+        String nombre = textoEscrito.getText();
+        Label.setText(nombre);
 
+        String apellido = TfApellido.getText();
+        ResultApellido.setText(apellido);
 
+        String nacimientoValue = (FormattedTFNaci.getValue() != null) ? FormattedTFNaci.getValue().toString() : "NOche";
+        String muerteValue = (FormateddTexFieldMuerte.getValue() != null) ? FormateddTexFieldMuerte.getValue().toString() : "asdasd";
 
-    // Método que se usa para personalizar los componentes en el GUI Designer (si usas un IDE como IntelliJ)
+        ResultNacimiento.setText(nacimientoValue);
+        ResultMuerte.setText(muerteValue);
+    }
+
+    // Método para abrir el selector de archivos y mostrar la imagen
+    private void onBuscarButtonClick(ActionEvent e) {
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            setScaledImage(selectedFile);
+        }
+    }
+
+    // Método para redimensionar y mostrar la imagen seleccionada
+    private void setScaledImage(File file) {
+        ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
+        Image image = imageIcon.getImage();
+        Image newImage = image.getScaledInstance(LabelImg.getWidth(), LabelImg.getHeight(), Image.SCALE_SMOOTH);
+        LabelImg.setIcon(new ImageIcon(newImage));
+    }
+
+    // Método para personalizar componentes
     private void createUIComponents() {
-        // Aquí podrías personalizar tus componentes si lo deseas
-    System.out.println("entro en createUIComponents");
-        //JFormattedTextField FormattedNaci = null;
-        FormattedTFNaci = null;
-        FormateddTexFieldMuerte = null;
-
         try {
-            // Crear un MaskFormatter para la fecha en formato dd/MM/yyyy
             MaskFormatter dateMask = new MaskFormatter("##/##/####");
-            //dateMask.setPlaceholderCharacter(' ');
+            dateMask.setPlaceholderCharacter('_');
 
-            // Crea el JFormattedTextField con el MaskFormatter
             FormattedTFNaci = new JFormattedTextField(dateMask);
             FormateddTexFieldMuerte = new JFormattedTextField(dateMask);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
-
     }
+
 }
