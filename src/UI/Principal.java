@@ -1,11 +1,15 @@
 package UI;
 
+import domain.Add;
+
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Principal extends JFrame {
     private JPanel Principal;
@@ -55,6 +59,26 @@ public class Principal extends JFrame {
 
         ResultNacimiento.setText(nacimientoValue);
         ResultMuerte.setText(muerteValue);
+
+        guardar(nombre, apellido, nacimientoValue, muerteValue);
+    }
+
+    private void guardar(String nombre, String apellido, String nacimiento, String muerte) {
+//genera un id para el nombre del documento. esto puedo cambiar
+        int id = (int) (Math.random() * 1000000);
+        try {
+            Map<String, Object> datos = new HashMap<>();
+            datos.put("Nombre", nombre);
+            datos.put("Apellido", apellido);
+            datos.put("Nacimiento", nacimiento);
+            datos.put("Muerte", muerte);
+            Add.agregar("persona", String.valueOf(id), datos);
+            JOptionPane.showMessageDialog(null, "Guardado con exito");
+        }catch (HeadlessException e){
+            System.out.println("No se pudo guardar");
+            JOptionPane.showMessageDialog(null, "No se pudo guardar");
+        }
+
     }
 
     // Método para abrir el selector de archivos y mostrar la imagen
