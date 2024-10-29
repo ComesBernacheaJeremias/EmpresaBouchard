@@ -22,6 +22,7 @@ public class Conexion {
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(sa))
+                    .setStorageBucket("empresabouchard-b7081.appspot.com")
                     .build();
 
             FirebaseApp.initializeApp(options);

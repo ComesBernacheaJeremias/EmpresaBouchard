@@ -2,6 +2,12 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+# Ignorar el archivo JSON de Firebase
+empresabouchard-firebase.json
+
+# Ignorar el archivo pom.xml
+pom.xml
+
 
 ### Eclipse ###
 .apt_generated

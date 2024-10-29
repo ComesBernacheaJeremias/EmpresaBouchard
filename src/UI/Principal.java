@@ -1,6 +1,7 @@
 package UI;
 
-import domain.Add;
+
+import domain.CrudFirebase;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -72,7 +73,7 @@ public class Principal extends JFrame {
             datos.put("Apellido", apellido);
             datos.put("Nacimiento", nacimiento);
             datos.put("Muerte", muerte);
-            Add.agregar("persona", String.valueOf(id), datos);
+            CrudFirebase.agregar("persona", String.valueOf(id), datos);
             JOptionPane.showMessageDialog(null, "Guardado con exito");
         }catch (HeadlessException e){
             System.out.println("No se pudo guardar");
@@ -81,14 +82,50 @@ public class Principal extends JFrame {
 
     }
 
+    private void actualizar(String nombre, String apellido, String nacimiento, String muerte) {
+
+        //Debo poner el id adecuado lo que puse es un ejemplo
+        int id = 1;
+        try {
+            Map<String, Object> datos = new HashMap<>();
+            datos.put("Nombre", nombre);
+            datos.put("Apellido", apellido);
+            datos.put("Nacimiento", nacimiento);
+            datos.put("Muerte", muerte);
+            CrudFirebase.agregar("persona", String.valueOf(id), datos);
+            JOptionPane.showMessageDialog(null, "Guardado con exito");
+        }catch (HeadlessException e){
+            System.out.println("No se pudo guardar");
+            JOptionPane.showMessageDialog(null, "No se pudo guardar");
+        }
+
+    }
+    private void eliminar(String nombre, String apellido, String nacimiento, String muerte) {
+        //debo poner la persona y el id adecuados
+        int id = 1;
+        try {
+
+            CrudFirebase.eliminar("persona", String.valueOf(id));
+            JOptionPane.showMessageDialog(null, "Guardado con exito");
+        }catch (HeadlessException e){
+            System.out.println("No se pudo guardar");
+            JOptionPane.showMessageDialog(null, "No se pudo guardar");
+        }
+
+    }
+
+
+
     // Método para abrir el selector de archivos y mostrar la imagen
     private void onBuscarButtonClick(ActionEvent e) {
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             setScaledImage(selectedFile);
+            CrudFirebase.subirImagen(selectedFile);
         }
     }
+
 
     // Método para redimensionar y mostrar la imagen seleccionada
     private void setScaledImage(File file) {
